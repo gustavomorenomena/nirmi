@@ -5,7 +5,7 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
 function App() {
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div className="w-screen h-screen relative">
       <Map
         mapboxAccessToken={MAPBOX_TOKEN}
         initialViewState={{
@@ -15,6 +15,13 @@ function App() {
         }}
         mapStyle="mapbox://styles/mapbox/streets-v9"
       />
+      <div className="absolute bottom-0 left-0 right-0 p-4">
+        <div className="mx-auto max-w-500">
+          <button className="py-2 px-4 bg-green-600 text-white border-white border rounded-full">
+            Post something 📌
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
