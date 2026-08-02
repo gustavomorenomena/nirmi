@@ -6,7 +6,6 @@ import * as React from "react";
 function RootComponent() {
   return (
     <React.Fragment>
-      <div>Hello "__root"!</div>
       <Outlet />
       <TanStackRouterDevtools />
     </React.Fragment>
