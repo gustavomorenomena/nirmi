@@ -1,6 +1,4 @@
-import { getBoard } from "@/api/boards";
 import { getPosts } from "@/api/posts";
-import { Container } from "@/components/Container";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Empty,
@@ -12,32 +10,22 @@ import {
 } from "@/components/ui/empty";
 import { FileEmpty01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/boards/$boardId")({
+export const Route = createFileRoute("/boards/$boardId/")({
   loader: async ({ params: { boardId } }) => {
-    const { board } = await getBoard(boardId);
-    if (!board) {
-      throw notFound();
-    }
     const { posts } = await getPosts(boardId);
-    return { board, posts: posts || [] };
+    return { posts: posts || [] };
   },
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { board, posts } = Route.useLoaderData();
+  const { posts } = Route.useLoaderData();
+  const { boardId } = Route.useParams();
 
   return (
-    <Container className="my-4">
-      <h1 className="text-center">
-        <span className="text-xs text-gray-500">ANNONCES</span>
-        <br />
-        <span className="text-xl text-primary font-bold">
-          {String(board.name).toUpperCase()}
-        </span>
-      </h1>
+    <>
       {posts.length === 0 ? (
         <Empty>
           <EmptyHeader>
@@ -50,12 +38,16 @@ function RouteComponent() {
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            <Link to="/" className={buttonVariants()}>
+            <Link
+              to="/boards/$boardId/create"
+              params={{ boardId }}
+              className={buttonVariants()}
+            >
               Nouvelle Annonce
             </Link>
           </EmptyContent>
         </Empty>
       ) : null}
-    </Container>
+    </>
   );
 }

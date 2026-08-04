@@ -13,7 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as BoardsBoardIdRouteImport } from './routes/boards/$boardId'
+import { Route as BoardsBoardIdRouteRouteImport } from './routes/boards/$boardId/route'
+import { Route as BoardsBoardIdIndexRouteImport } from './routes/boards/$boardId/index'
+import { Route as BoardsBoardIdCreateRouteImport } from './routes/boards/$boardId/create'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,45 +37,80 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
-const BoardsBoardIdRoute = BoardsBoardIdRouteImport.update({
+const BoardsBoardIdRouteRoute = BoardsBoardIdRouteRouteImport.update({
   id: '/boards/$boardId',
   path: '/boards/$boardId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BoardsBoardIdIndexRoute = BoardsBoardIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BoardsBoardIdRouteRoute,
+} as any)
+const BoardsBoardIdCreateRoute = BoardsBoardIdCreateRouteImport.update({
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => BoardsBoardIdRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/boards/$boardId': typeof BoardsBoardIdRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
-  '/boards/$boardId': typeof BoardsBoardIdRoute
   '/auth/': typeof AuthIndexRoute
+  '/boards/$boardId/create': typeof BoardsBoardIdCreateRoute
+  '/boards/$boardId/': typeof BoardsBoardIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth/login': typeof AuthLoginRoute
-  '/boards/$boardId': typeof BoardsBoardIdRoute
   '/auth': typeof AuthIndexRoute
+  '/boards/$boardId/create': typeof BoardsBoardIdCreateRoute
+  '/boards/$boardId': typeof BoardsBoardIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/boards/$boardId': typeof BoardsBoardIdRouteRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
-  '/boards/$boardId': typeof BoardsBoardIdRoute
   '/auth/': typeof AuthIndexRoute
+  '/boards/$boardId/create': typeof BoardsBoardIdCreateRoute
+  '/boards/$boardId/': typeof BoardsBoardIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/auth/login' | '/boards/$boardId' | '/auth/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/boards/$boardId'
+    | '/auth/login'
+    | '/auth/'
+    | '/boards/$boardId/create'
+    | '/boards/$boardId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth/login' | '/boards/$boardId' | '/auth'
-  id: '__root__' | '/' | '/auth' | '/auth/login' | '/boards/$boardId' | '/auth/'
+  to:
+    | '/'
+    | '/auth/login'
+    | '/auth'
+    | '/boards/$boardId/create'
+    | '/boards/$boardId'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/boards/$boardId'
+    | '/auth/login'
+    | '/auth/'
+    | '/boards/$boardId/create'
+    | '/boards/$boardId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  BoardsBoardIdRoute: typeof BoardsBoardIdRoute
+  BoardsBoardIdRouteRoute: typeof BoardsBoardIdRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -110,8 +147,22 @@ declare module '@tanstack/react-router' {
       id: '/boards/$boardId'
       path: '/boards/$boardId'
       fullPath: '/boards/$boardId'
-      preLoaderRoute: typeof BoardsBoardIdRouteImport
+      preLoaderRoute: typeof BoardsBoardIdRouteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/boards/$boardId/': {
+      id: '/boards/$boardId/'
+      path: '/'
+      fullPath: '/boards/$boardId/'
+      preLoaderRoute: typeof BoardsBoardIdIndexRouteImport
+      parentRoute: typeof BoardsBoardIdRouteRoute
+    }
+    '/boards/$boardId/create': {
+      id: '/boards/$boardId/create'
+      path: '/create'
+      fullPath: '/boards/$boardId/create'
+      preLoaderRoute: typeof BoardsBoardIdCreateRouteImport
+      parentRoute: typeof BoardsBoardIdRouteRoute
     }
   }
 }
@@ -130,10 +181,23 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
+interface BoardsBoardIdRouteRouteChildren {
+  BoardsBoardIdCreateRoute: typeof BoardsBoardIdCreateRoute
+  BoardsBoardIdIndexRoute: typeof BoardsBoardIdIndexRoute
+}
+
+const BoardsBoardIdRouteRouteChildren: BoardsBoardIdRouteRouteChildren = {
+  BoardsBoardIdCreateRoute: BoardsBoardIdCreateRoute,
+  BoardsBoardIdIndexRoute: BoardsBoardIdIndexRoute,
+}
+
+const BoardsBoardIdRouteRouteWithChildren =
+  BoardsBoardIdRouteRoute._addFileChildren(BoardsBoardIdRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  BoardsBoardIdRoute: BoardsBoardIdRoute,
+  BoardsBoardIdRouteRoute: BoardsBoardIdRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
