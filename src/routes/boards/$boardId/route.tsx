@@ -17,7 +17,7 @@ function RouteComponent() {
   const { board } = Route.useLoaderData();
   return (
     <Container className="my-4">
-      <h1 className="text-center">
+      <h1 className="text-center mb-4">
         <span className="text-xs text-gray-500">ANNONCES</span>
         <br />
         <span className="text-xl text-primary font-bold">
