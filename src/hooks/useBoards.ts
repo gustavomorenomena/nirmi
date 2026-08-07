@@ -12,6 +12,7 @@ export interface Board {
   lat: number;
   lng: number;
   external_link: string | null;
+  description: string | null;
 }
 
 export function useBoards() {
@@ -28,7 +29,7 @@ export function useBoards() {
 
       const { data, error } = await supabase
         .from("active_boards")
-        .select("id, name, lat, lng, external_link");
+        .select("id, name, lat, lng, external_link, description");
 
       if (!isMounted) return;
 
