@@ -1,9 +1,12 @@
 import "mapbox-gl/dist/mapbox-gl.css";
-import Map from "react-map-gl/mapbox";
+import Map, { Marker } from "react-map-gl/mapbox";
+import { useBoards } from "./hooks/useBoards";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
 function App() {
+  const { boards } = useBoards();
+
   return (
     <main className="h-dvh w-screen overflow-hidden">
       <Map
@@ -15,7 +18,11 @@ function App() {
         }}
         mapStyle="mapbox://styles/mapbox/streets-v9"
         reuseMaps
-      />
+      >
+        {boards.map(({ id, lat, lng }) => (
+          <Marker key={id} latitude={lat} longitude={lng} anchor="bottom" />
+        ))}
+      </Map>
     </main>
   );
 }
