@@ -1,49 +1,52 @@
 import { supabase } from "@/lib/supabase";
 import { useEffect, useState } from "react";
 
-export interface Board {
+export type Post = {
   id: string;
-  name: string;
-  lat: number;
-  lng: number;
-  external_link: string | null;
-  description: string | null;
-}
+  title: string;
+  content?: string;
+  external_link?: string;
+  image_url?: string;
+  created_at: string;
+};
 
-export function useBoards() {
-  const [boards, setBoards] = useState<Board[]>([]);
+export function useBoardPosts(boardId?: string) {
+  const [posts, setPosts] = useState<Post[]>([]);
   const [errors, setErrors] = useState<unknown | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     let isMounted = true;
 
-    async function fetchBoards() {
+    async function fetchPosts() {
       setIsLoading(true);
       setErrors(null);
 
       const { data, error } = await supabase
-        .from("active_boards")
-        .select("id, name, lat, lng, external_link, description");
+        .from("active_posts")
+        .select("id, title, content, external_link, image_url, created_at")
+        .eq("board_id", boardId);
 
       if (!isMounted) return;
 
       if (error) {
         setErrors(error);
-        setBoards([]);
+        setPosts([]);
       } else {
-        setBoards(data ?? []);
+        setPosts(data ?? []);
       }
 
       setIsLoading(false);
     }
 
-    fetchBoards();
+    if (boardId) {
+      fetchPosts();
+    }
 
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [boardId]);
 
-  return { boards, errors, isLoading };
+  return { posts, errors, isLoading };
 }

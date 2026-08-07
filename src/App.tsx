@@ -1,24 +1,14 @@
-import { buttonVariants } from "@/components/ui/button";
 import { type Board, useBoards } from "@/hooks/useBoards";
-import { SquareArrowOutUpRight } from "lucide-react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useState } from "react";
 import Map, { Marker } from "react-map-gl/mapbox";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from "./components/ui/drawer";
-import useIsMobile from "./hooks/use-is-mobile";
+import { BoardDrawer } from "./components/BoardDrawer";
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
 function App() {
   const { boards } = useBoards();
   const [selectedBoard, setSelectedBoard] = useState<Board>();
-  const { isMobile } = useIsMobile();
 
   return (
     <>
@@ -42,43 +32,12 @@ function App() {
               onClick={() => {
                 setSelectedBoard(board);
               }}
+              color="red"
             />
           ))}
         </Map>
+        <BoardDrawer board={selectedBoard} setBoard={setSelectedBoard} />
       </main>
-      <Drawer
-        open={!!selectedBoard}
-        onOpenChange={(open) => {
-          if (!open) {
-            setSelectedBoard(undefined);
-          }
-        }}
-        showSwipeHandle={isMobile}
-        swipeDirection={isMobile ? "down" : "left"}
-      >
-        {selectedBoard && (
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>{selectedBoard.name}</DrawerTitle>
-              {selectedBoard.description && (
-                <DrawerDescription>
-                  {selectedBoard.description}
-                </DrawerDescription>
-              )}
-              {selectedBoard.external_link && (
-                <a
-                  target="_blank"
-                  href={selectedBoard.external_link}
-                  className={buttonVariants({ variant: "link" })}
-                >
-                  Site web <SquareArrowOutUpRight />
-                </a>
-              )}
-            </DrawerHeader>
-            <div className="p-4">{/* Content here */}</div>
-          </DrawerContent>
-        )}
-      </Drawer>
     </>
   );
 }
