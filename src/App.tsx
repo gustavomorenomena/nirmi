@@ -5,7 +5,7 @@ const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
 function App() {
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <main className="h-dvh w-screen overflow-hidden">
       <Map
         mapboxAccessToken={MAPBOX_TOKEN}
         initialViewState={{
@@ -14,8 +14,9 @@ function App() {
           zoom: 13,
         }}
         mapStyle="mapbox://styles/mapbox/streets-v9"
+        reuseMaps
       />
-    </div>
+    </main>
   );
 }
 
