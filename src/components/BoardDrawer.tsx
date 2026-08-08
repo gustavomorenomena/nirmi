@@ -18,6 +18,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "./ui/empty";
+import { Separator } from "./ui/separator";
 import { Skeleton } from "./ui/skeleton";
 
 export function BoardDrawer({
@@ -67,9 +68,12 @@ export function BoardDrawer({
                 <Skeleton className="h-4 w-[80%]" />
               </div>
             ) : posts.length ? (
-              <div className="space-y-10">
-                {posts.map((post) => (
-                  <PostCard key={post.id} post={post} />
+              <div className="space-y-5">
+                {posts.map((post, index) => (
+                  <>
+                    {index > 0 && <Separator />}
+                    <PostCard key={post.id} post={post} />
+                  </>
                 ))}
               </div>
             ) : (

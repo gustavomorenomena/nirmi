@@ -1,6 +1,7 @@
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useState } from "react";
+import nl2br from "react-nl2br";
 
 // shadcn/ui primitives
 import type { Post } from "@/hooks/useBoardPosts";
@@ -29,27 +30,13 @@ export function PostCard({ post, maxContentLength = 120 }: PostCardProps) {
 
   return (
     <div>
-      {post.image_url && (
-        <div className="relative aspect-square w-full bg-muted overflow-hidden">
-          <img
-            src={post.image_url}
-            alt={post.title}
-            className="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.02]"
-            loading="lazy"
-          />
-        </div>
-      )}
-      <div className="flex flex-col pt-3">
-        <h3 className="font-semibold leading-tight text-foreground">
-          {post.title}
-        </h3>
-        <span className="text-[11px] text-muted-foreground capitalize">
-          {formattedDate}
-        </span>
-      </div>
-
-      <div className="py-1 text-sm text-foreground/90 leading-relaxed">
-        <span>{displayContent}</span>
+      <h3 className="font-semibold">{post.title}</h3>
+      <span className="text-[11px] text-muted-foreground">
+        {formattedDate[0].toUpperCase()}
+        {formattedDate.slice(1)}
+      </span>
+      <div className="py-2 text-sm text-foreground/90">
+        <span>{!isExpanded ? displayContent : nl2br(displayContent)}</span>
         {hasLongContent && (
           <button
             onClick={() => setIsExpanded(!isExpanded)}
@@ -59,17 +46,24 @@ export function PostCard({ post, maxContentLength = 120 }: PostCardProps) {
           </button>
         )}
       </div>
+      <div className="relative aspect-square w-full bg-muted overflow-hidden">
+        <img
+          src={post.image_url}
+          alt={post.title}
+          className="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.02]"
+          loading="lazy"
+        />
+      </div>
       {post.external_link && (
         <a
           target="_blank"
           href={post.external_link}
-          className={buttonVariants({
+          className={`${buttonVariants({
             variant: "link",
             size: "xs",
-            className: "py-1",
-          })}
+          })} mt-2`}
         >
-          Voir <SquareArrowOutUpRight />
+          Consulter le lien <SquareArrowOutUpRight />
         </a>
       )}
     </div>
